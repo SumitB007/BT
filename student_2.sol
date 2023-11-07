@@ -1,34 +1,21 @@
-//SPDX-License-Identifier: Unlicensed
-pragma solidity >=0.8.0;
-
-contract Student {
-    struct student {
-        uint256 prn;
+// SPDX-License-Identifier: Unlicensed
+pragma solidity ^0.8.0;
+contract StudentData {
+    struct Student {
         string name;
-        string class;
-        string department;
+        uint256 rollNumber;
+        uint256 age;
     }
-    uint256 PRN;
-    mapping(uint256 => student) studentMap;
-
-    function addStudent(
-        string memory name,
-        string memory class,
-        string memory department
-    ) public {
-        PRN += 1;
-        studentMap[PRN] = student(PRN, name, class, department);
+    Student[] public students;
+    function addStudent(string memory _name, uint256 _rollNumber, uint256 _age) public {
+        Student memory newStudent = Student(_name, _rollNumber, _age);
+        students.push(newStudent);
     }
-
-    function getStudent(uint256 _id) public view returns (student memory) {
-        return studentMap[_id];
+    function getStudent(uint256 index) public view returns (string memory, uint256, uint256) {
+        require(index < students.length, "Student does not exist");
+        Student storage student = students[index];
+        return (student.name, student.rollNumber, student.age);
     }
-
-    function totalStudents() public view returns (uint256) {
-        return (PRN);
-    }
-
-    fallback() external {
-        addStudent("Unknown", "FE", "CSE");
-    }
+    fallback() external payable {}
+    receive() external payable {}
 }
